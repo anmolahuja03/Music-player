@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" 
+    integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" 
+    crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="main_div">
+        <div class="music_container">
+            <h2 id="title"> Jeet </h2>
+            <h3 id="artist"> Ritwiz </h3>
+            <div class="img_container">
+                <img src = "image/jeet.jpg" alt = "">
+            </div>
+            <audio src="music/jeet.mp3"></audio>
+        
+            <div class="progressbar_container" id="progress_container">
+                <div class="progress_duration_meter">
+                    <div id="current_time"> 0.00</div>
+                    <div id="duration"> 2.44 </div>
+                </div>
+                <div class="progress_div" id="progress_div">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
+        
+
+    
+
+            <div class="music_control">
+                <i class="fas fa-backward" id ="prev" title="Previous"></i>
+                <i class="fas fa-play main_button " id ="play" title="Play"></i>
+                <i class="fas fa-forward" id ="next" title="Next"></i>
+            </div>
+        </div>     
+    </div>
+    <script>
+        const music = document.querySelector("audio");
+        const img = document.querySelector("img");
+        const play = document.getElementById("play");
+        const artist = document.getElementById("artist");
+        const title = document.getElementById("title");
+        const prev = document.getElementById("prev");
+        const next = document.getElementById("next");
+
+        let progress = document.getElementById("progress");
+        let tota_duration = document.getElementById("duration");
+        let current_time = document.getElementById("current_time");
+
+        const songs = [
+            {
+            name : "jeet",
+            title : "jeet",
+            artist: "Ritwiz",
+        },
+        {
+            name : "Perfect",
+            title: "Perfect",
+            artist: "Ed Sheeran",
+        },
+        {
+            name : "Thandi Hawa",
+            title : "Thandi Hawa",
+            artist: "Ritwiz",
+        },
+    ];
+        let isPlaying = false;
+//for play functionality
+          const playMusic = () => {
+            isPlaying = true;
+            music.play();
+            play.classList.replace("fa-play","fa-pause");
+            img.classList.add("anime");
+        };
+//for pause functionality
+        const pauseMusic =  () => {
+            isPlaying = false;
+            music.pause();
+            play.classList.replace("fa-pause","fa-play");
+            img.classList.add("anime");
+        };
+        play.addEventListener("click", () => {
+            if(isPlaying){
+                pauseMusic();
+            }else{
+                playMusic();
+            }
+        });
+   
+ //changing the music data
+    const loadSong = (songs) => {
+        title.textContent =songs.title;
+        artist.textContent = songs.artist;
+        music.src = "music/"+ songs.name + ".mp3";
+        img.src = "image/"+ songs.name + ".jpg";
+    };
+
+    songIndex = 1;
+    //loadSong(songs[1]);
+    const nextSong = () => {
+        songIndex = (songIndex + 1)% songs.length;
+        loadSong(songs[songIndex]);
+        playMusic();
+    };
+
+    const prevSong = () => {
+        songIndex = (songIndex - 1 +songs.length) % songs.length;;
+        loadSong(songs[songIndex]);
+        playMusic();
+    };
+
+   // progress js work
+    music.addEventListener('timeupdate',(event) => {
+       // console.log(event);
+        const {currentTime , duration} = event.srcElement;
+        let progress_time = (currentTime / duration ) * 100;
+        console.log(progress_time);
+        progress.style.width = `${progress_time}%`;
+
+       // music duration update
+       
+       let min_duration = Math.floor(duration / 60);
+       let sec_duration = Math.floor(duration % 60);
+       
+      let tot_duration = `${min_duration}:${sec_duration}`
+
+      total_duration.textContent = `${tot_duration}`;
+    });
+
+    next.addEventListener('click',nextSong);
+    prev.addEventListener('click',prevSong);
+
+
+         
+    </script>
+</body>
+</html>
